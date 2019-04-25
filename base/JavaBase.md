@@ -30,6 +30,6 @@ java.sql jdbc相关
    
    2、final修饰的类不能被继承， final修饰的方法不能被覆盖， final 修饰的变量不可改， static final 修饰的是唯一不可改
    
-   3、
+   3、String StringBuffer StringBuilder
   
 
