@@ -59,12 +59,20 @@
     * 数据结构是数组和链表，默认初始容量16，装载因子0.75
     * 解决hash冲突通过判断链表中的值。
     * jdk 1.8中过长链表会转红黑树(TREEIFY_THRESHOLD = 8)
-    * < 1 扩容，即两倍方式扩容
+    * << 1 扩容，即两倍方式扩容
     
   * ConcurrentHashMap
+    * 数据结构是数组和链表，默认初始容量是16，装载因子0.75
+    * 1.7 数组segment继承ReentrantLock, 其中HashEntry volatile修饰，保证获取时的可见性。此方案使其有分段锁的能力，不会和HashTable一样put、get都是同步操作。且支持CurrencyLevel(Segment数量)的并发，每个线程占用锁访问segment时不会影响其他Segment，未解决遍历链表慢问题
+    * 1.8 放弃segment，采用cas + synchronized保证并发
+    * 链表长度超过TREEIFY_THRESHOLD = 8 转红黑树
+     
   * HashTable
+    * 
   * TreeMap
   * LinkedHashMap
   * WeekHashMap
   
 8. jdk 中 % / 操作 比 & 操作 慢 10 倍： https://bugs.java.com/bugdatabase/view_bug.do?bug_id=4631373
+
+9. volatile 关键字
