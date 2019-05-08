@@ -68,11 +68,21 @@
     * 链表长度超过TREEIFY_THRESHOLD = 8 转红黑树
      
   * HashTable
-    * 
+    * 数组和链表，默认出事容量11，装载因子0.75
+    * 线程安全，操作中都有synchronized
   * TreeMap
+    * 数组和红黑树
+    * 以key大小顺序存储
   * LinkedHashMap
+    * 数组和链表 转红黑树，继承 HashMap
+    * 保证插入顺序
   * WeekHashMap
   
-8. jdk 中 % / 操作 比 & 操作 慢 10 倍： https://bugs.java.com/bugdatabase/view_bug.do?bug_id=4631373
+8.jdk 中 % / 操作 比 & 操作 慢 10 倍： https://bugs.java.com/bugdatabase/view_bug.do?bug_id=4631373
 
-9. volatile 关键字
+9.volatile 关键字
+
+10.transient 关键字
+   * transient 只能修饰变量，不能修饰方法、类
+   * 被修饰变量不再是对象持久化的一部分
+   * 被修饰的变量不在被序列化
