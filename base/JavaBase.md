@@ -46,7 +46,7 @@
     * Vector线程安全，基本操作有synchronized
   * 扩容机制
     * ArrayList Vector 都是数组，增加元素数组长度不够时会扩容
-        ArrayList默认大小10，增长倍数1.5倍；Vector 默认10，默认增长倍数2倍；Vector可以设置capacityIncrement调整增长大小
+    * ArrayList默认大小10，增长倍数1.5倍；Vector 默认10，默认增长倍数2倍；Vector可以设置capacityIncrement调整增长大小
               
 5.浅拷贝 深拷贝 clone
    * 浅拷贝、深拷贝是指一个概念上的区别，在针对只有一个基础数据类型的对象拷贝时，用clone()获取的这个对象就是深拷贝，如果这个对象内部还有引用数据类型，使用clone就是一次浅拷贝，因为引用类型没有拷贝
@@ -77,6 +77,8 @@
     * 数组和链表 转红黑树，继承 HashMap
     * 保证插入顺序
   * WeekHashMap
+    * 特点：WeakReference 会被jvm 做gc时 删除entry
+    * 使用场景：缓存
   
 8.jdk 中 % / 操作 比 & 操作 慢 10 倍： https://bugs.java.com/bugdatabase/view_bug.do?bug_id=4631373
 
