@@ -82,9 +82,22 @@
   
 8.jdk 中 % / 操作 比 & 操作 慢 10 倍： https://bugs.java.com/bugdatabase/view_bug.do?bug_id=4631373
 
-9.volatile 关键字
-
-10.transient 关键字
+9.transient 关键字
    * transient 只能修饰变量，不能修饰方法、类
    * 被修饰变量不再是对象持久化的一部分
    * 被修饰的变量不在被序列化
+   
+10.Abstract Interface
+   * 抽象类可以有默认方法，interface 在java8之前没有，java8后有了default
+   * 继承抽象类使用extends，实现interface使用implement
+   * 子类不是抽象类的需要实现父类抽象类，子类实现interface父类时需要实现所有方法
+   * 子类可以实现多个interface，子类只能继承一个抽象类
+   
+11.继承 实现 聚合 组合 
+   * 子类继承父类功能，并可以扩展其他能力  extends
+   * 实现：指class 实现interface相关功能
+   * 依赖：是指A用到了B，关系较弱
+   * 关联：A与B有领域间关联关系，如1对多、多对多关系，关系较强
+   * 聚合：强调整体与部分、拥有的关系即has - a关系
+   * 组合：强聚合，提现的是contain - a关系 
+      
