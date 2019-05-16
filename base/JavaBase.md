@@ -111,9 +111,22 @@
    * 在运行状态中，对于任何一个类，我们都可以获取到其方法和属性，对于任何一个对象我们都可以获取其方法和属性进行调用。动态获取对象信息并且和调用对象方法的功能称为反射机制
    * 反射本质就是获取类的字节码文件，也就是.class文件
    * 反射创建类实例：Class.forName() 找不到会报ClassNotFundException;.getClass() 该方法已知道类，无卵用；.class方式需要导入依赖
+   * Class.forName classLoad
+      * 两者都可以对类加载
+      * forName除将class加载到jvm中，还会对类进行解释，执行静态代码模块；classload只会加载，只有在newInstance时才会执行静态代码，而该过程其实是实例化过程
+      * Class.forName(name,initialize,loader)带参函数也可控制是否加载static块
    
 14.动态代理  静态代理  cglib
+   * 代理模式
+   * 静态代理：proxy也需要实现接口，传递是接口实现类，功能实现的本质也是实现类的调用
+   * 动态代理：利用JDK API，动态地在内存中构建对象进行代理实现功能。在编译过程中没有生成class文件，在运行过程中通过反射方式加载对应的class文件
+   * cglib：第三方代码生成类库，运行时内存中动态生成一个子类对象从而实现对目标对象功能的扩展
+   
+   * 动态代理使用限制是需要实现一个接口功能，如果想代理没有实现接口类的功能的话可以选择cglib
+   * cglib本质是代码增强，使用的是ASM，spring aop大量使用
+   * cglib会继承目标类，需要重写方法，所以目标对象的方法不能是final的
+   
 
-15. exception error 
+15. Exception Error 
  
              
