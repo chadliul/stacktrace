@@ -18,7 +18,6 @@
   
   栈：每个线程创建时都会分配对应的栈区，包含内存变量、操作栈、方法返回值
   程序计数器：用于记录下一条要执行指令的地址和被中断地址。如果方法是native的，程序计数器的不会被定义为空
-  
   栈和程序计数器是线程私有，每个线程启动时都会创建自己的栈和程序计数器
   本地方法栈：为运行native方法准备的空间
   
@@ -45,18 +44,70 @@
      * 新生代内存分配：Eden区和Survivor区，比例8:1
      
      * 分代算法中GC过程
-     
+       * Eden区触发阈值时会发生Minor GC(-Xmn256m)，将Eden区的存活对象移到From区，非存活对象释放，新对象入Eden区
+       * 当Eden区再次满时，触发Minor GC，Eden区和From区存活对象移到到To区，非存活对象释放，新对象入Eden区
+       * 当Minor GC时发现To区存不下时，会把存活的对象移到老年代（-XX:TargetSurvivorRatio）
+       * 大对象会直接进入老年代
+       * 当Minor GC次数达到一定的阈值时对象会被移到老年代（默认15：-XX:MaxTenuringThreshold 可设置）
+       * 如果From区的对象中相同岁数数据的对象总和大于两个Survivor区空间的一半，那么超过这个岁数的对象都会被移到老年代
+       * 当老年代无法存储对象时会发生Full GC(-Xmx1g)
+       * Full GC是对整个堆的一次GC，如果一次完成GC后还是无法给出存储空间则会抱oom
      * 垃圾收集器
-       * Serail/Serail Old 单线程收集器
-       * ParNew 是Serail 的多线程版本
+       * Serial/Serial Old 单线程收集器
+       * ParNew 是Serial 的多线程版本
        * Parallel Scavenge 是一个新生代并行收集的收集器，目标是要达到一定的吞吐量，使用coping算法
        * Parallel Old，parallel 的老年代收集器，使用多线程和标记清除算法
        * CMS，尽量降低stw时间，采用标记-清除算法
-       * G1，降低stw时间，平均stw 100ms
+       * G1，降低stw时间，平均stw 100ms 采用标记-整理算法
        * 最新的ZGC ，测试stw在1～4ms
        
-      
+       |items| CMS | G1 | 
+       |:---- | :----: | ---:|
+       |算法|标记-清除 | 标记-整理|
+       |目标|增加响应速度，以最小stw时间为目标|可预测垃圾回收的停顿时间|
+       |范围|使用在老年代，可配合parallel scavenge，ParNew新生代的垃圾回收器使用| 不需要配合| 
+       |过程| 标记，并行标记，重新标记，并发清除| 标记，并行标记，最终标记，筛选回收| 
+       
+     * 内存屏障
+       * 内存屏障是在硬件之上、jvm之下为并发做出的最后一层保障。解决硬件层面的可见性和重排序问题。volatile解决了编译器层面的可见性和重排序问题
+       * MESI协议
+         * M(Modified) 本地处理器修改缓存行且只有本地一个拷贝，内存未改
+         * E(Exclusive) 缓存行和内存数据一致，且其他处理器没有该行数据
+         * S(Shared) 缓存行和内存一致，有可能其他处理器拷贝该数据
+         * I(Invalid) 缓存行失效  
+         
   
+# 类
+  类加载过程：
+  加载 链接(验证、准备、解析) 初始化 使用 卸载
+  
+  类加载器
+  启动类加载器 （Bootstrap ClassLoad）：C++ 实现
+  扩展加载器
+  系统加载器
+  一般开发都是继承系统加载器
+  
+  * 双亲委派模型要求除顶层的启动类加载器之外，其余的类加载器都应当有自己的父类加载器
+  * 双亲委派模型过程：
+      * 如果一个类加载器收到了类加载的请求，它首先不会自己尝试加载这个类，而是把这个请求委派给父类加载器去完成
+      * 每一层类加载都是该方式，直至顶层启动类加载器
+      * 如果父类加载器反馈自己无法加载请求时，子类加载器才会尝试自己加载类
+  
+  * 意义：防止内存中出现多个相同字节码
+  * 缺点：
+      * 基类总是被调用的，但是如果基类回调用户类就没办法了，如SPI方式，见JNDI
+      * 需要不同类的隔离，无法满足，如tomcat自己实现了类加载，
+        Bootstrap ClassLoader，Extension ClassLoader， Application ClassLoader，Common ClassLoader， Catalina ClassLoader，Shared ClassLoader，WebApp ClassLoader，Jsp ClassLoader
+        其中Catalina ClassLoader对于WebApp ClassLoader不可见，每个WebApp ClassLoader相对隔离，只加载自己的类，不会传递到父加载器
+  * 破坏：
+      * SPI、JNDI、OSGi等为了实现各自的需求，也在一定程度上破坏了双亲委派模型，使用线程上下文类加载器
+      * 热部署
+  
+  
+JVM
+* HotSpot VM
+* J9 VM
+* Zing VM
   
   
   
