@@ -127,6 +127,13 @@
    * cglib会继承目标类，需要重写方法，所以目标对象的方法不能是final的
    
 
-15. Exception Error 
+15.Exception Error 
+   * Exception Error 类都继承Throwable类，Exception分checked和unchecked,Error是unchecked
+   * 常见error，NoClassDefFundErr， OOMError LinkageError
+   * Exception中非运行时异常：SQLException IOException 自定义Exception，要么catch要么throw
+   * 常见RuntimeException：npe，IndexOutOfBoundsException，ClassNotFundException,ArithmeticException,NumberFormatException
+   
+16.
+   
  
              
